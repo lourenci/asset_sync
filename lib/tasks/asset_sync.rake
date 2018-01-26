@@ -19,6 +19,10 @@ if Rake::Task.task_defined?("assets:precompile:nondigest")
     # will get executed before yaml or Rails initializers.
     Rake::Task["assets:sync"].invoke if defined?(AssetSync) && AssetSync.config.run_on_precompile
   end
+elsif Rake::Task.task_defined?("webpacker:compile")
+  Rake::Task["webpacker:compile"].enhance do
+    Rake::Task["assets:sync"].invoke if defined?(AssetSync) && AssetSync.config.run_on_precompile
+  end
 else
   Rake::Task["assets:precompile"].enhance do
     # rails 3.1.1 will clear out Rails.application.config if the env vars
